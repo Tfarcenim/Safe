@@ -3,6 +3,7 @@ package info.jbcs.minecraft.safe;
 
 import java.util.EnumSet;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,11 +32,11 @@ public class ProxyClient extends Proxy{
 		mc = FMLClientHandler.instance().getClient();
 		//TickRegistry.registerTickHandler(this, Side.CLIENT);
 
-		//TileEntityRenderer.instance.specialRendererMap.put(TileEntitySafe.class, new TileEntitySafeRenderer());
-		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer(RenderingRegistry.getNextAvailableRenderId()));
-		
-		RenderingRegistry.registerEntityRenderingHandler(EntityFallingSafe.class, new RenderFallingSafe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySafe.class, new TileEntitySafeRenderer());
+		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer());
+		BlockSafeRenderer.id = RenderingRegistry.getNextAvailableRenderId();
 
+		RenderingRegistry.registerEntityRenderingHandler(EntityFallingSafe.class, new RenderFallingSafe());
 	}
 /*
 	@Override

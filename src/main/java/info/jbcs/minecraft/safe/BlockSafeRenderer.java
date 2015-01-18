@@ -11,8 +11,8 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 public class BlockSafeRenderer implements ISimpleBlockRenderingHandler {
 	static int id;
 
-	public BlockSafeRenderer(int i) {
-		id = i;
+	public BlockSafeRenderer() {
+
 	}
 
 	@Override
