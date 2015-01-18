@@ -1,0 +1,17 @@
+[
+{
+  "modid": "Safe",
+  "name": "Safe",
+  "description": "Adds a safe block that protects items you store in it from other people.",
+  "version": "1.2.0",
+  "credits": "",
+  "logoFile": "",
+  "mcversion": "1.6.4",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "AUTOMATIC_MAIDEN" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
+}
+]
