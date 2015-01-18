@@ -1,9 +1,10 @@
 package info.jbcs.minecraft.safe;
 
-import info.jbcs.minecraft.utilities.General;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.client.stream.Metadata;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -21,28 +22,28 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 	
 	public EntityFallingSafe(World par1World) {
 		super(par1World);
-		
-		setIsAnvil(true);
+
+		func_145806_a(true);
 	}
 
 	public EntityFallingSafe(World par1World, double x, double y, double z) {
-		this(par1World, x, y, z, Safe.blockSafe.blockID, 0);
+		this(par1World, x, y, z, Safe.blockSafe, 0);
 	}
 
-    public EntityFallingSafe(World world, double x, double y, double z, int blockId){
-        this(world, x, y, z, blockId, 0);
+    public EntityFallingSafe(World world, double x, double y, double z, Block block){
+        this(world, x, y, z, block, 0);
     }
 
-    public EntityFallingSafe(World world, double x, double y, double z, int blockId, int meta){
-        super(world,x,y,z,blockId,meta);
-		
-		setIsAnvil(true);
-    }
+    public EntityFallingSafe(World world, double x, double y, double z, Block block, int meta){
+        super(world,x,y,z,block,meta);
 
+		func_145806_a(true);
+    }
+/*
 	@Override
 	public void writeSpawnData(ByteArrayDataOutput data) {
-		data.writeShort(blockID);
-		data.writeByte(metadata);	
+		data.writeShort(Integer.valueOf(Block.getIdFromBlock(super.func_145805_f())));
+		data.writeByte(Integer.valueOf(super.field_145814_a));
 	}
 
 	@Override
@@ -50,13 +51,19 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 		blockID=data.readShort();
 		metadata=data.readByte();
 	}
-
+*/
     /**
      * Called to update the entity's position/logic.
      */
+	public Block getBlock(){
+		return super.func_145805_f();
+	}
+	public int getMeta(){
+		return super.field_145814_a;
+	}
     @Override
 	public void onUpdate(){
-        if (blockID == 0){
+        if (getBlock() == Blocks.air){
             setDead();
             return;
         }
@@ -69,7 +76,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
-		++fallTime;
+		++field_145812_b;
 		motionY -= 0.08D;
 		force=motionY;	
 		if(! onGround) moveEntity(motionX, motionY, motionZ);
@@ -87,10 +94,10 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 		int y = MathHelper.floor_double(posY);
 		final int z = MathHelper.floor_double(posZ);
 
-		if (fallTime == 1) {
-			if (!worldObj.isRemote && worldObj.getBlockId(x, y, z) != blockID) {
+		if (field_145812_b == 1) {
+			if (!worldObj.isRemote && worldObj.getBlock(x, y, z) != getBlock()) {
 				setDead();
-				return;
+				return; //super.func_145805_f() - getBlock
 			}
 
 			worldObj.setBlockToAir(x, y, z);
@@ -106,10 +113,10 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 				y--;
 			}
 			
-			worldObj.setBlock(x, y, z, blockID, metadata, 3);
-			Block block=General.getBlock(blockID);
+			worldObj.setBlock(x, y, z, getBlock(), getMeta(), 3);
+			Block block=getBlock();
 			if(block instanceof BlockSafe){
-				((BlockSafe)block).finishFall(worldObj, x, y, z, metadata, fallingBlockTileEntityData,hitY-(int)posY);
+				((BlockSafe)block).finishFall(worldObj, x, y, z, getMeta(), getEntityData(),hitY-(int)posY);
 			}
 			
 			fall(fallDistance);
@@ -132,7 +139,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
     }
     
     public double getBlockResitance(World world,int x,int y,int z){
-		Block block=General.getBlock(worldObj.getBlockId(x, y, z));
+		Block block=worldObj.getBlock(x, y, z);
 		if(block==null) return 0;
 		
 		return block.getExplosionResistance(this, worldObj, x, y, z, posX, posY, posZ);
@@ -148,7 +155,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 		boolean breakArea=false;
 		
 		double explosionForce=(force*force) * 6.0;
-		Block block=General.getBlock(worldObj.getBlockId(x, y, z));
+		Block block=worldObj.getBlock(x, y, z);
 		if(block==null) return false;
 		
 		Explosion explosion=new Explosion(worldObj,this,x,y,z,(float)explosionForce);
@@ -170,7 +177,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
     	BlockSafe.fallSound(worldObj, x, y, z, (int) (hitY-posY));
         
         block.dropBlockAsItemWithChance(this.worldObj, x, y, z, this.worldObj.getBlockMetadata(x, y, z), 1.0F / explosion.explosionSize, 0);
-        worldObj.setBlock(x, y, z, 0, 0, 1);
+        worldObj.setBlock(x, y, z, Blocks.air, 0, 1);
         block.onBlockDestroyedByExplosion(worldObj, x, y, z, explosion);
                 
         force=motionY=force*(explosionForce-resitance*0.5)/explosionForce;

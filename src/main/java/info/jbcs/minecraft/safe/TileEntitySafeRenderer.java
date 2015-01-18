@@ -6,8 +6,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -31,7 +31,7 @@ public class TileEntitySafeRenderer extends TileEntitySpecialRenderer {
 	};
 
 	public static void bind(ResourceLocation par1ResourceLocation) {
-		TextureManager texturemanager = TileEntityRenderer.instance.renderEngine;
+		TextureManager texturemanager = Minecraft.getMinecraft().renderEngine;
 
 		if (texturemanager != null) {
 			texturemanager.bindTexture(par1ResourceLocation);
@@ -95,7 +95,7 @@ public class TileEntitySafeRenderer extends TileEntitySpecialRenderer {
 				ProxyClient.hoverX==safe.xCoord && 
 				ProxyClient.hoverY==safe.yCoord && 
 				ProxyClient.hoverZ==safe.zCoord &&
-				safe.worldObj.getBlockId(safe.xCoord, safe.yCoord+1, safe.zCoord)==0
+				safe.getWorldObj().getBlock(safe.xCoord, safe.yCoord+1, safe.zCoord)== Blocks.air
 		){
 			renderLivingLabel(safe.ownerName,x,y+1.0f,z);
 		}

@@ -1,14 +1,13 @@
 package info.jbcs.minecraft.safe;
 
-import info.jbcs.minecraft.utilities.InventoryStatic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntitySafe extends TileEntity implements IInventory, ISidedInventory {
@@ -27,10 +26,15 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 
 	InventoryStatic inventory = new InventoryStatic(36) {
 		@Override
-		public String getInvName() {
+		public String getInventoryName() {
 			return "Safe";
 		}
-		
+
+		@Override
+		public void markDirty() {
+
+		}
+
 		@Override
 		public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 			if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != TileEntitySafe.this) {
@@ -94,8 +98,8 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 	}
 
 	@Override
-	public String getInvName() {
-		return inventory.getInvName();
+	public String getInventoryName() {
+		return inventory.getInventoryName();
 	}
 
 	@Override
@@ -139,12 +143,12 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 		writeToNBT(var1);
 		var1.removeTag("items");
 		var1.removeTag("lastcrack");
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, var1);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, var1);
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.data);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.func_148857_g());
 	}
 
 	@Override
@@ -153,19 +157,19 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 	}
 
 	@Override
-	public void openChest() {
+	public void openInventory() {
 		++userCount;
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
-	public void closeChest() {
+	public void closeInventory() {
 		--userCount;
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
-	public boolean isInvNameLocalized() {
+	public boolean hasCustomInventoryName() {
 		return false;
 	}
 

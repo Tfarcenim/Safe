@@ -4,7 +4,7 @@ package info.jbcs.minecraft.safe;
 import java.util.EnumSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+//import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -31,7 +31,7 @@ public class ProxyClient extends Proxy{
 		mc = FMLClientHandler.instance().getClient();
 		//TickRegistry.registerTickHandler(this, Side.CLIENT);
 
-		TileEntityRenderer.instance.specialRendererMap.put(TileEntitySafe.class, new TileEntitySafeRenderer());
+		//TileEntityRenderer.instance.specialRendererMap.put(TileEntitySafe.class, new TileEntitySafeRenderer());
 		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer(RenderingRegistry.getNextAvailableRenderId()));
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingSafe.class, new RenderFallingSafe());

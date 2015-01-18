@@ -50,9 +50,9 @@ public class Safe {
 		proxy.preInit();
  	}
 	
-	int getBlock(String name,int id){
+	/*int getBlock(String name,int id){
 		return config.getBlock(name, id).getInt(id);
-	}
+	}*/
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -74,7 +74,7 @@ public class Safe {
 		guiSafe=new GuiHandler("safe"){
 			@Override
 			public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		        if(! (tileEntity instanceof TileEntitySafe))
 		        	return null;
@@ -86,7 +86,7 @@ public class Safe {
 
 			@Override
 			public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-                TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		        if(! (tileEntity instanceof TileEntitySafe))
 		        	return null;

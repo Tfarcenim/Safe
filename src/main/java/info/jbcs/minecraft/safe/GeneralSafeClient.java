@@ -1,7 +1,11 @@
 package info.jbcs.minecraft.safe;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -13,13 +17,12 @@ public class GeneralSafeClient {
 	public static Random rand = new Random();
 
 	public static EntityDiggingFX addBlockHitEffects(World world, int x, int y, int z, int side) {
-		Block i1 = world.getBlock(x, y, z);
-		if (i1 == null)
+		Block block = world.getBlock(x, y, z);
+		if (block == null)
 			return null;
 
 		EffectRenderer renderer = Minecraft.getMinecraft().effectRenderer;
 
-		Block block = Block.blocksList[i1];
 		float f = 0.1F;
 		double d0 = x + rand.nextDouble() * (block.getBlockBoundsMaxX() - block.getBlockBoundsMinX() - f * 2.0F) + f + block.getBlockBoundsMinX();
 		double d1 = y + rand.nextDouble() * (block.getBlockBoundsMaxY() - block.getBlockBoundsMinY() - f * 2.0F) + f + block.getBlockBoundsMinY();

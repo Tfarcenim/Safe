@@ -8,7 +8,7 @@ public class ContainerSafe extends ContainerTileEntity<TileEntitySafe> {
 	public ContainerSafe(IInventory playerInv, TileEntitySafe machine) {
 		super(playerInv, machine, 8, 103);
 		
-		entity.openChest();
+		entity.openInventory();
 		
 		int index=0;
 
@@ -23,7 +23,7 @@ public class ContainerSafe extends ContainerTileEntity<TileEntitySafe> {
 	public void onContainerClosed(EntityPlayer par1EntityPlayer){
         super.onContainerClosed(par1EntityPlayer);
         
-        entity.closeChest();
+        entity.closeInventory();
     }
 
 }

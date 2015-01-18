@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockSafe extends BlockContainer implements ITileEntityProvider {
@@ -127,7 +128,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
 		ret.add(new ItemStack(this, 1, 0));
@@ -154,7 +155,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister register) {
+	public void registerBlockIcons(IIconRegister register) {
 		iconSide=register.registerIcon("safe:metal-side");
 		iconTop=register.registerIcon("safe:metal-top");
 	}
@@ -171,12 +172,14 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 
 	@Override
 	public void onBlockAdded(World par1World, int par2, int par3, int par4) {
-		par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
+		par1World.scheduleBlockUpdate(par2, par3, par4, this, this.tickRate(par1World));
 	}
 
 	@Override
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
+	//public void onNeighborChange(World par1World, int x, int y, int z, int tileX, int tileY, int tileZ) {
+	public void onNeighborChange(IBlockAccess iBlockAccess, int x, int y, int z, int tileX, int tileY, int tileZ) {
+		World world = iBlockAccess.getTileEntity(x, y, z).getWorldObj();
+		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 	}
 
 	@Override
@@ -200,8 +203,8 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 		safe.turnedToEntity=true;
 		
 		if (!fallInstantly && world.checkChunksExist(x - dist, y - dist, z - dist, x + dist, y + dist, z + dist)) {			
-			EntityFallingSafe entity = new EntityFallingSafe(world, x + 0.5F, y + 0.5F, z + 0.5F, blockID, meta);
-			entity.fallingBlockTileEntityData = tag;
+			EntityFallingSafe entity = new EntityFallingSafe(world, x + 0.5F, y + 0.5F, z + 0.5F, this, meta);
+			entity.readFromNBT(tag.getCompoundTag("ForgeData")); //customEntityData() = tag;
 			world.spawnEntityInWorld(entity);
 		} else {
 			world.setBlockToAir(x, y, z);

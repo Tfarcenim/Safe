@@ -15,8 +15,9 @@ public class RenderFallingSafe extends Render {
 		if(! (entity instanceof EntityFallingSafe)) return;
 		EntityFallingSafe safe=(EntityFallingSafe) entity;
 
-		int cracks=safe.fallingBlockTileEntityData!=null?safe.fallingBlockTileEntityData.getInteger("cracks"):0;
-        TileEntitySafeRenderer.render(cracks,x-0.5, y-0.5, z-0.5, frame, safe.metadata, 0, 0);
+		//int cracks=safe.fallingBlockTileEntityData!=null?safe.fallingBlockTileEntityData.getInteger("cracks"):0;
+		int cracks=0;
+        TileEntitySafeRenderer.render(cracks,x-0.5, y-0.5, z-0.5, frame, safe.getMeta(), 0, 0);
 	}
 
 	@Override
