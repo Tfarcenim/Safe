@@ -1,7 +1,5 @@
 package info.jbcs.minecraft.safe;
 
-import info.jbcs.minecraft.utilities.General;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,14 +7,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -24,12 +23,13 @@ import net.minecraft.world.World;
 public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	static boolean fallInstantly=false;
 
-	Icon iconSide,iconTop;
+	IIcon iconSide,iconTop;
 	
-	public BlockSafe(int id) {
-		super(id,Material.glass);	
+	public BlockSafe() {
+		super(Material.glass);
 
-		setStepSound(soundMetalFootstep);
+		setBlockName("safe");
+		setStepSound(soundTypeMetal);
 		
 		setHardness(0.3F);
 		setResistance(6000000.0F);
@@ -40,7 +40,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 
 	@Override
 	public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer entityplayer, int a, float b, float x, float y) {
-		TileEntitySafe tileEntity = (TileEntitySafe) world.getBlockTileEntity(i, j, k);
+		TileEntitySafe tileEntity = (TileEntitySafe) world.getTileEntity(i, j, k);
 		if (tileEntity == null)
 			return false;
 
@@ -56,7 +56,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 		if(! world.isAirBlock(ox, oy, oz))
 			return true;
 		
-		if (entityplayer.username.equals(tileEntity.ownerName) || tileEntity.userCount>0 || entityplayer.capabilities.isCreativeMode) {
+		if (entityplayer.getDisplayName().equals(tileEntity.ownerName) || tileEntity.userCount>0 || entityplayer.capabilities.isCreativeMode) {
 			Safe.guiSafe.open(entityplayer, world, i, j, k);
 			
 			return true;
@@ -72,13 +72,13 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 
 		if (entityliving instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entityliving;
-			e.ownerName = player.username;
+			e.ownerName = player.getDisplayName();
 		}
 
 		if(stack.stackTagCompound!=null)
 			e.readFromNBT(stack.stackTagCompound);
 
-		world.setBlockTileEntity(i, j, k, e);
+		world.setTileEntity(i, j, k, e);
 		
 		byte meta = 0;
 		int facing = MathHelper.floor_double((entityliving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -100,7 +100,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer) {
 		if(world.isRemote) return;
 		
-		TileEntity tileEntity = world.getBlockTileEntity(i, j, k);
+		TileEntity tileEntity = world.getTileEntity(i, j, k);
 		if (tileEntity == null) return;
 		TileEntitySafe safe=(TileEntitySafe) tileEntity;
 		boolean empty=safe.inventory.isEmpty();
@@ -111,7 +111,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 			return;
 		}
 		
-		if(entityplayer.username!=safe.ownerName && !creative){
+		if(entityplayer.getDisplayName()!=safe.ownerName && !creative){
             world.playSoundEffect(i + 0.5D, j + 0.5D, k + 0.5D, "safe:safe-locked", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 			return;
 		}
@@ -121,16 +121,16 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	}
 	
 	public void destroy(World world, int i, int j, int k) {
-		world.playAuxSFX(2001, i, j, k, blockID + (world.getBlockMetadata(i, j, k) << 12));
+		world.playAuxSFX(2001, i, j, k, Block.getIdFromBlock(this) + (world.getBlockMetadata(i, j, k) << 12));
 		dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-		world.setBlock(i, j, k, 0);
+		world.setBlock(i, j, k, Blocks.air);
 	}
 	
 	@Override
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
-		ret.add(new ItemStack(blockID, 1, 0));
+		ret.add(new ItemStack(this, 1, 0));
 		
 		return ret;
 	}
@@ -147,21 +147,14 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
         return BlockSafeRenderer.id;
     }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1) {
-		TileEntitySafe e=new TileEntitySafe();
-		
-		return e;
-	}
-	
 
 	@Override
-	public Icon getIcon(int side, int metadata) {
+	public IIcon getIcon(int side, int metadata) {
 		return side<2?iconTop:iconSide;
 	}
 
 	@Override
-	public void registerIcons(IconRegister register) {
+	public void registerIcons(IIconRegister register) {
 		iconSide=register.registerIcon("safe:metal-side");
 		iconTop=register.registerIcon("safe:metal-top");
 	}
@@ -196,7 +189,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 
 		byte dist = 32;
 
-		TileEntitySafe safe = (TileEntitySafe) world.getBlockTileEntity(x, y, z);
+		TileEntitySafe safe = (TileEntitySafe) world.getTileEntity(x, y, z);
 		if (safe == null) return;
 		safe.userCount=0;
 		
@@ -222,23 +215,23 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	}
 
 	public static boolean canFallBelow(World world, int x, int y, int z) {
-		int l = world.getBlockId(x, y, z);
+		Block l = world.getBlock(x, y, z);
 
 		if (world.isAirBlock(x, y, z)) {	
 			return true;
-		} else if (l == Block.fire.blockID) {
+		} else if (l == Blocks.fire) {
 			return true;
 		} else {
-			Material material = Block.blocksList[l].blockMaterial;
+			Material material = l.getMaterial();
 			return material == Material.water ? true : material == Material.lava;
 		}
 	}
 	
 	static void fallSound(World world, int x, int y, int z,int distance){
- 		Block block=General.getBlock(world.getBlockId(x, y-1, z));
+ 		Block block = world.getBlock(x, y-1, z);
 		String sound=null;
 		Material material;
-		if(block!=null && block.blockMaterial!=null) material=block.blockMaterial;
+		if(block!=null && block.getMaterial()!=null) material=block.getMaterial();
 		else material=Material.air;
 		
 		
@@ -260,8 +253,8 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 			return;
 		}
 		
-		world.setBlock(x, y, z, this.blockID, meta, 0);
-		TileEntitySafe newSafe = (TileEntitySafe) world.getBlockTileEntity(x, y, z);
+		world.setBlock(x, y, z, this, meta, 0);
+		TileEntitySafe newSafe = (TileEntitySafe) world.getTileEntity(x, y, z);
 		if (newSafe == null) return;
 
 		newSafe.readFromNBT(tag);
@@ -285,7 +278,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
     }
     
     void crack(World world, int x, int y, int z){
-		TileEntitySafe safe = (TileEntitySafe) world.getBlockTileEntity(x, y, z);
+		TileEntitySafe safe = (TileEntitySafe) world.getTileEntity(x, y, z);
 		if (safe == null) return;
 		
 		if(world.rand.nextInt(100)>Safe.crackChance)
@@ -308,13 +301,17 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
     
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int id, int meta) {
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileEntitySafe && !((TileEntitySafe) tile).turnedToEntity){
 			((TileEntitySafe) tile).inventory.throwItems(world, x, y, z);
 		}
 		
-		super.breakBlock(world, x, y, z, id, meta);
+		super.breakBlock(world, x, y, z, block, meta);
 	}
 
+	@Override
+	public TileEntity createNewTileEntity(World world, int i) {
+		return new TileEntitySafe();
+	}
 }

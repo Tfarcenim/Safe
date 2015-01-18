@@ -1,0 +1,7 @@
+{
+"safe-open": {"category": "master","sounds": [{"name": "safe-open","stream": false}]},
+"safe-close": {"category": "master","sounds": [{"name": "safe-close","stream": false}]},
+"safe-locked": {"category": "master","sounds": [{"name": "safe-locked","stream": false}]},
+"fall-metal": {"category": "master","sounds": [{"name": "fall-meta","stream": false}]},
+"fall-wood": {"category": "master","sounds": [{"name": "fall-wood","stream": false}]}
+}

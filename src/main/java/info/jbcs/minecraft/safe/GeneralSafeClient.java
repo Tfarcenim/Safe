@@ -6,14 +6,15 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class GeneralSafeClient {
 	public static Random rand = new Random();
 
 	public static EntityDiggingFX addBlockHitEffects(World world, int x, int y, int z, int side) {
-		int i1 = world.getBlockId(x, y, z);
-		if (i1 == 0)
+		Block i1 = world.getBlock(x, y, z);
+		if (i1 == null)
 			return null;
 
 		EffectRenderer renderer = Minecraft.getMinecraft().effectRenderer;
@@ -61,30 +62,30 @@ public class GeneralSafeClient {
 	
 	public static void spawnSafeFallEffect(World world, int x, int y, int z) {
 		for (int j = 0; j < 16; j++) {
-			if(world.getBlockId(x, y, z-1)==0){
+			if(world.getBlock(x, y, z-1)==Blocks.air){
 				addBlockHitEffects(world, x, y, z, 2);
 				addBlockHitEffects(world, x, y-1, z-1, 1);
 			}
-			if(world.getBlockId(x, y, z+1)==0){
+			if(world.getBlock(x, y, z + 1)==Blocks.air){
 				addBlockHitEffects(world, x, y, z, 3);
 				addBlockHitEffects(world, x, y-1, z+1, 1);
 			}
-			if(world.getBlockId(x-1, y, z)==0){
+			if(world.getBlock(x - 1, y, z)==Blocks.air){
 				addBlockHitEffects(world, x, y, z, 4);
 				addBlockHitEffects(world, x-1, y-1, z, 1);
 			}
-			if(world.getBlockId(x+1, y, z)==0){
+			if(world.getBlock(x + 1, y, z)==Blocks.air){
 				addBlockHitEffects(world, x, y, z, 5);
 				addBlockHitEffects(world, x+1, y-1, z, 1);
 			}
 			
-			if(world.getBlockId(x, y-1, z-1)==0)
+			if(world.getBlock(x, y - 1, z - 1)==Blocks.air)
 				addBlockHitEffects(world, x, y-1, z, 2);
-			if(world.getBlockId(x, y-1, z+1)==0)
+			if(world.getBlock(x, y - 1, z + 1)==Blocks.air)
 				addBlockHitEffects(world, x, y-1, z, 3);
-			if(world.getBlockId(x-1, y-1, z)==0)
+			if(world.getBlock(x - 1, y - 1, z)==Blocks.air)
 				addBlockHitEffects(world, x, y-1, z, 4);
-			if(world.getBlockId(x+1, y-1, z)==0)
+			if(world.getBlock(x+1, y-1, z)==Blocks.air)
 				addBlockHitEffects(world, x, y-1, z, 5);
 		}
 	}

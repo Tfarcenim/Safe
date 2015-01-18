@@ -1,8 +1,9 @@
 package info.jbcs.minecraft.safe;
 
 import info.jbcs.minecraft.utilities.General;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityFallingSand;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -12,7 +13,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityFallingSafe extends EntityFallingSand implements IEntityAdditionalSpawnData{
+public class EntityFallingSafe extends EntityFallingBlock implements IEntityAdditionalSpawnData{
     int startY=-1;
     int hitY=-1;
     double force=0;
@@ -197,4 +198,13 @@ public class EntityFallingSafe extends EntityFallingSand implements IEntityAddit
     		alreadyDead=true;
     }
 
+	@Override
+	public void writeSpawnData(ByteBuf byteBuf) {
+
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf byteBuf) {
+
+	}
 }

@@ -33,7 +33,7 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 		
 		@Override
 		public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-			if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != TileEntitySafe.this) {
+			if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != TileEntitySafe.this) {
 				return false;
 			} else {
 				return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
