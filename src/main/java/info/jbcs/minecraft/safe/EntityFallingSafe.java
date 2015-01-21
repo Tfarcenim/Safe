@@ -1,6 +1,8 @@
 package info.jbcs.minecraft.safe;
 
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.client.stream.Metadata;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -39,19 +41,17 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 
 		func_145806_a(true);
     }
-/*
 	@Override
-	public void writeSpawnData(ByteArrayDataOutput data) {
-		data.writeShort(Integer.valueOf(Block.getIdFromBlock(super.func_145805_f())));
-		data.writeByte(Integer.valueOf(super.field_145814_a));
+	public void writeSpawnData(ByteBuf byteBuf) {
+		byteBuf.writeShort(Integer.valueOf(Block.getIdFromBlock(super.func_145805_f())));
+		byteBuf.writeByte(Integer.valueOf(super.field_145814_a));
 	}
 
 	@Override
-	public void readSpawnData(ByteArrayDataInput data) {
-		blockID=data.readShort();
-		metadata=data.readByte();
+	public void readSpawnData(ByteBuf byteBuf) {
+		//super.field_145811_e=byteBuf.readShort();
+		super.field_145814_a=byteBuf.readByte();
 	}
-*/
     /**
      * Called to update the entity's position/logic.
      */
@@ -121,20 +121,19 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 			
 			fall(fallDistance);
 			
-			/*
+
 			final int finaly=y;
 			
 			if(worldObj.isRemote){
-				Packets.safeCheck.sendToServer(new PacketData(){
-					@Override
-					public void data(DataOutputStream stream) throws IOException {
-						stream.writeInt(x);
-						stream.writeInt(z);
-						stream.writeInt(startY);
-						stream.writeInt(finaly-3);
-					}
-				});
-			}*/
+				ByteBuf buffer = Unpooled.buffer();
+				buffer.writeInt(x);
+				buffer.writeInt(z);
+				buffer.writeInt(startY);
+				buffer.writeInt(finaly-3);
+				FMLProxyPacket packet = new FMLProxyPacket(buffer.copy(), "Vending");
+
+				Safe.Channel.sendToServer(packet);
+			}
 		}
     }
     
@@ -204,14 +203,4 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
     	else
     		alreadyDead=true;
     }
-
-	@Override
-	public void writeSpawnData(ByteBuf byteBuf) {
-
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf byteBuf) {
-
-	}
 }

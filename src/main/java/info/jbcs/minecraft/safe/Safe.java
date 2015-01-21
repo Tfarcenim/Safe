@@ -2,6 +2,8 @@ package info.jbcs.minecraft.safe;
 
 import java.io.File;
 
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +32,8 @@ public class Safe {
 	public static BlockSafe blockSafe;
 	public static GuiHandler guiSafe;
 
+	public static FMLEventChannel Channel;
+
 	static Configuration config;
 	
 	@Instance("Safe")
@@ -56,6 +60,8 @@ public class Safe {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("Vending");
+		Safe.Channel.register(new ServerPacketHandler());
 		crackDelay=config.get("general", "crack delay", 86400, "The amount of seconds that must pass before safe block can get another crack").getInt();
 		crackCount=config.get("general", "crack count", 6, "The amount of cracks that will cause the safe to break.").getInt();
 		crackChance=config.get("general", "crack chance", 100, "Chance, in percent, that a safe will receive a crack from an explosion").getInt();
