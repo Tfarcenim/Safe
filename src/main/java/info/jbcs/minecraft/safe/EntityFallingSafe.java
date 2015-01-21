@@ -130,7 +130,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 				buffer.writeInt(z);
 				buffer.writeInt(startY);
 				buffer.writeInt(finaly-3);
-				FMLProxyPacket packet = new FMLProxyPacket(buffer.copy(), "Vending");
+				FMLProxyPacket packet = new FMLProxyPacket(buffer.copy(), "Safe");
 
 				Safe.Channel.sendToServer(packet);
 			}
