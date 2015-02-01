@@ -13,17 +13,16 @@ public class RenderFallingSafe extends Render {
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float a, float frame) {
 		if(! (entity instanceof EntityFallingSafe)) return;
-		EntityFallingSafe safe=(EntityFallingSafe) entity;
+		EntityFallingSafe fallingSafe=(EntityFallingSafe) entity;
 
-		//int cracks=safe.fallingBlockTileEntityData!=null?safe.fallingBlockTileEntityData.getInteger("cracks"):0;
-		int cracks=0;
-        TileEntitySafeRenderer.render(cracks,x-0.5, y-0.5, z-0.5, frame, safe.getMeta(), 0, 0);
+        int meta = fallingSafe.getMeta();
+		int cracks = fallingSafe.cracks;
+        TileEntitySafeRenderer.render(cracks,x-0.5, y-0.5, z-0.5, frame, meta, 0, 0);
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		return TileEntitySafeRenderer.textures[0];
 	}
-
 	
 }

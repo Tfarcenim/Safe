@@ -268,7 +268,7 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 		newSafe.xCoord = x; newSafe.yCoord = y; newSafe.zCoord = z;
 		world.markBlockForUpdate(x, y, z);
 	}
-	
+
     @Override
 	public boolean canDropFromExplosion(Explosion par1Explosion){
         return false;

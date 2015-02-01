@@ -17,6 +17,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityFallingSafe extends EntityFallingBlock implements IEntityAdditionalSpawnData{
+    private Block f_145811_e;
+    int cracks = 0;
     int startY=-1;
     int hitY=-1;
     double force=0;
@@ -38,20 +40,26 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 
     public EntityFallingSafe(World world, double x, double y, double z, Block block, int meta){
         super(world,x,y,z,block,meta);
-
 		func_145806_a(true);
     }
 	@Override
 	public void writeSpawnData(ByteBuf byteBuf) {
-		byteBuf.writeShort(Integer.valueOf(Block.getIdFromBlock(super.func_145805_f())));
-		byteBuf.writeByte(Integer.valueOf(super.field_145814_a));
+        byteBuf.writeInt(super.field_145810_d.getInteger("cracks"));
+		byteBuf.writeShort(Block.getIdFromBlock(super.func_145805_f()));
+		byteBuf.writeByte(super.field_145814_a);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf byteBuf) {
-		//super.field_145811_e=byteBuf.readShort();
+        cracks = byteBuf.readInt();
+		f_145811_e = Block.getBlockById(byteBuf.readShort());
 		super.field_145814_a=byteBuf.readByte();
 	}
+
+    @Override
+    public Block func_145805_f() {
+        return this.f_145811_e;
+    }
     /**
      * Called to update the entity's position/logic.
      */
@@ -195,7 +203,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 			int z = MathHelper.floor_double(posZ);
 
 			BlockSafe.fallSound(worldObj, x, y, z, (int) (startY - posY));
-			//worldObj.playAuxSFX(2001, x, y, z, worldObj.getBlockId(x, y, z) + (worldObj.getBlockMetadata(x, y, z) << 12));
+			worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(worldObj.getBlock(x,y,z)) + (worldObj.getBlockMetadata(x, y, z) << 12));
 		}
     	
     	if(! worldObj.isRemote)
