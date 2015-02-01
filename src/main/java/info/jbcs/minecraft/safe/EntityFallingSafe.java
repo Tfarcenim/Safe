@@ -185,6 +185,7 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
         
         block.dropBlockAsItemWithChance(this.worldObj, x, y, z, this.worldObj.getBlockMetadata(x, y, z), 1.0F / explosion.explosionSize, 0);
         worldObj.setBlock(x, y, z, Blocks.air, 0, 1);
+        worldObj.markBlockForUpdate(x, y, z);
         block.onBlockDestroyedByExplosion(worldObj, x, y, z, explosion);
                 
         force=motionY=force*(explosionForce-resitance*0.5)/explosionForce;
