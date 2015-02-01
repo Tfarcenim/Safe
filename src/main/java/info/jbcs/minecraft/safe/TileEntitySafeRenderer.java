@@ -89,12 +89,11 @@ public class TileEntitySafeRenderer extends TileEntitySpecialRenderer {
 		int meta = safe.getBlockMetadata();
 		
 		render(safe.cracks,x,y,z,frame,meta,safe.prevLidAngle,safe.lidAngle);
-		
 		if(
-				ProxyClient.hoveringBlock && 
-				ProxyClient.hoverX==safe.xCoord && 
-				ProxyClient.hoverY==safe.yCoord && 
-				ProxyClient.hoverZ==safe.zCoord &&
+				OwnerHintGui.hoveringBlock &&
+                OwnerHintGui.hoverX==safe.xCoord &&
+                OwnerHintGui.hoverY==safe.yCoord &&
+                OwnerHintGui.hoverZ==safe.zCoord &&
 				safe.getWorldObj().getBlock(safe.xCoord, safe.yCoord+1, safe.zCoord)== Blocks.air
 		){
 			renderLivingLabel(safe.ownerName,x,y+1.0f,z);
