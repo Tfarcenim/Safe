@@ -149,7 +149,6 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
         return BlockSafeRenderer.id;
     }
 
-
 	@Override
 	public IIcon getIcon(int side, int metadata) {
 		return side<2?iconTop:iconSide;

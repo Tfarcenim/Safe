@@ -5,14 +5,12 @@ import java.util.EnumSet;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.client.Minecraft;
-//import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 public class ProxyClient extends Proxy{
 	private Minecraft mc;
@@ -33,8 +31,7 @@ public class ProxyClient extends Proxy{
 		//TickRegistry.registerTickHandler(this, Side.CLIENT);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySafe.class, new TileEntitySafeRenderer());
-		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer());
-		BlockSafeRenderer.id = RenderingRegistry.getNextAvailableRenderId();
+		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer(RenderingRegistry.getNextAvailableRenderId()));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingSafe.class, new RenderFallingSafe());
 	}

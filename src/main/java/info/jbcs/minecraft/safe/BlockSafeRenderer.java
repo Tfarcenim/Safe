@@ -2,6 +2,7 @@ package info.jbcs.minecraft.safe;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
@@ -11,8 +12,8 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 public class BlockSafeRenderer implements ISimpleBlockRenderingHandler {
 	static int id;
 
-	public BlockSafeRenderer() {
-
+	public BlockSafeRenderer(int av_id) {
+        id = av_id;
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class BlockSafeRenderer implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-		return false;
+		return true;
 	}
 
 	@Override
