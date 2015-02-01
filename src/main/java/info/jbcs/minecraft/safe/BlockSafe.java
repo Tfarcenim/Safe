@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -53,11 +54,11 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 		case 4: ox--; break;
 		case 5: ox++; break;
 		}
-		
 		if(! world.isAirBlock(ox, oy, oz))
 			return true;
 		
 		if (entityplayer.getDisplayName().equals(tileEntity.ownerName) || tileEntity.userCount>0 || entityplayer.capabilities.isCreativeMode) {
+			world.playSoundEffect(i + 0.5D, j + 0.5D, k + 0.5D, "safe:safe-locked", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 			Safe.guiSafe.open(entityplayer, world, i, j, k);
 			
 			return true;
@@ -176,46 +177,49 @@ public class BlockSafe extends BlockContainer implements ITileEntityProvider {
 	}
 
 	@Override
-	//public void onNeighborChange(World par1World, int x, int y, int z, int tileX, int tileY, int tileZ) {
-	public void onNeighborChange(IBlockAccess iBlockAccess, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		World world = iBlockAccess.getTileEntity(x, y, z).getWorldObj();
-		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-	}
+    public void onNeighborBlockChange(World par1World, int x, int y, int z, Block block) {
+        par1World.scheduleBlockUpdate(x, y, z, this, this.tickRate(par1World));
+    }
 
-	@Override
-	public void updateTick(World world, int x, int y, int z, Random par5Random) {
-		tryToFall(world, x, y, z);
-	}
+    public void updateTick(World world, int x, int y, int z, Random par5Random) {
+        if(!world.isRemote) {
+            this.tryToFall(world, x, y, z);
+        }
 
-	private void tryToFall(World world, int x, int y, int z) {
-		if (! canFallBelow(world, x, y - 1, z) && y >= 0) return;
+    }
 
-		byte dist = 32;
 
-		TileEntitySafe safe = (TileEntitySafe) world.getTileEntity(x, y, z);
-		if (safe == null) return;
-		safe.userCount=0;
-		
-		int meta = world.getBlockMetadata(x, y, z);
-		NBTTagCompound tag = new NBTTagCompound();
-		safe.writeToNBT(tag);
+    private void tryToFall(World world, int x, int y, int z) {
+        if(! canFallBelow(world, x, y - 1, z) && y >= 0) return;
 
-		safe.turnedToEntity=true;
-		
-		if (!fallInstantly && world.checkChunksExist(x - dist, y - dist, z - dist, x + dist, y + dist, z + dist)) {			
-			EntityFallingSafe entity = new EntityFallingSafe(world, x + 0.5F, y + 0.5F, z + 0.5F, this, meta);
-			entity.readFromNBT(tag.getCompoundTag("ForgeData")); //customEntityData() = tag;
-			world.spawnEntityInWorld(entity);
-		} else {
-			world.setBlockToAir(x, y, z);
+        byte dist = 32;
 
-			int startY=y;
-			while (canFallBelow(world, x, y - 1, z) && y > 0) --y;
-			if (y <= 0) return;
+        TileEntitySafe safe = (TileEntitySafe) world.getTileEntity(x, y, z);
+        if (safe == null) return;
+        safe.userCount=0;
 
-			finishFall(world,x,y,z,meta,tag,startY-y);
-		}
-	}
+        int meta = world.getBlockMetadata(x, y, z);
+        NBTTagCompound tag = new NBTTagCompound();
+        safe.writeToNBT(tag);
+        safe.turnedToEntity=true;
+
+        if(!fallInstantly && world.checkChunksExist(x - dist, y - dist, z - dist, x + dist, y + dist, z + dist)) {
+            if(!world.isRemote) {
+                EntityFallingSafe entityfallingsafe = new EntityFallingSafe(world, x + 0.5F, y + 0.5F, z + 0.5F, this, meta);
+                entityfallingsafe.field_145810_d = tag;
+
+                world.spawnEntityInWorld(entityfallingsafe);
+            }
+        } else {
+            world.setBlockToAir(x, y, z);
+            int startY=y;
+
+            while(canFallBelow(world, x, y - 1, z) && y > 0) --y;
+
+            if(y > 0) finishFall(world,x,y,z,meta,tag,startY-y);
+        }
+
+    }
 
 	public static boolean canFallBelow(World world, int x, int y, int z) {
 		Block l = world.getBlock(x, y, z);

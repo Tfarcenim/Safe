@@ -116,7 +116,7 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
 		
-		if(nbttagcompound.hasKey("items")){
+		if(nbttagcompound.hasKey("Items")){
 			inventory.clear();
 			inventory.readFromNBT(nbttagcompound);
 		}
@@ -141,7 +141,7 @@ public class TileEntitySafe extends TileEntity implements IInventory, ISidedInve
 	public Packet getDescriptionPacket() {
 		NBTTagCompound var1 = new NBTTagCompound();
 		writeToNBT(var1);
-		var1.removeTag("items");
+		var1.removeTag("Items");
 		var1.removeTag("lastcrack");
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, var1);
 	}

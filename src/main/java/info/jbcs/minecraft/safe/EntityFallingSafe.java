@@ -113,10 +113,10 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 				y--;
 			}
 			
-			worldObj.setBlock(x, y, z, getBlock(), getMeta(), 3);
+			//worldObj.setBlock(x, y, z, getBlock(), getMeta(), 3);
 			Block block=getBlock();
 			if(block instanceof BlockSafe){
-				((BlockSafe)block).finishFall(worldObj, x, y, z, getMeta(), getEntityData(),hitY-(int)posY);
+				((BlockSafe)block).finishFall(worldObj, x, y, z, getMeta(), this.field_145810_d, hitY-(int)posY);
 			}
 			
 			fall(fallDistance);
@@ -189,14 +189,14 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 
     @Override
 	public void setDead(){
-/*    	if(! isDead){
-    		int x = MathHelper.floor_double(posX);
-    		int y = MathHelper.floor_double(posY);
-    		int z = MathHelper.floor_double(posZ);
+    	if(! isDead) {
+			int x = MathHelper.floor_double(posX);
+			int y = MathHelper.floor_double(posY);
+			int z = MathHelper.floor_double(posZ);
 
-        	BlockSafe.fallSound(worldObj, x, y, z, (int) (startY-posY));
-    		worldObj.playAuxSFX(2001, x, y, z, worldObj.getBlockId(x, y, z) + (worldObj.getBlockMetadata(x, y, z) << 12));
-    	}*/
+			BlockSafe.fallSound(worldObj, x, y, z, (int) (startY - posY));
+			//worldObj.playAuxSFX(2001, x, y, z, worldObj.getBlockId(x, y, z) + (worldObj.getBlockMetadata(x, y, z) << 12));
+		}
     	
     	if(! worldObj.isRemote)
     		super.setDead();
