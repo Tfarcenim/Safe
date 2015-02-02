@@ -27,7 +27,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraftforge.common.config.Configuration;
 
 
-@Mod(modid = "Safe", name = "Safe", version = "1.2.0") //dependencies = "required-after:Autoutils"
+@Mod(modid = "Safe", name = "Safe", version = "1.3.0") //dependencies = "required-after:Autoutils"
 public class Safe {
 	public static BlockSafe blockSafe;
 	public static GuiHandler guiSafe;
