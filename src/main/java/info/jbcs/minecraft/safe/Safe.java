@@ -1,19 +1,5 @@
 package info.jbcs.minecraft.safe;
 
-import java.io.File;
-
-import cpw.mods.fml.common.network.FMLEventChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -21,10 +7,29 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import info.jbcs.minecraft.safe.block.BlockSafe;
+import info.jbcs.minecraft.safe.entity.EntityFallingSafe;
+import info.jbcs.minecraft.safe.gui.GuiHandler;
+import info.jbcs.minecraft.safe.gui.GuiSafe;
+import info.jbcs.minecraft.safe.inventory.ContainerSafe;
+import info.jbcs.minecraft.safe.item.ItemSafe;
+import info.jbcs.minecraft.safe.proxy.Proxy;
+import info.jbcs.minecraft.safe.tileentity.TileEntitySafe;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 
 @Mod(modid = "Safe", name = "Safe", version = "1.3.0") //dependencies = "required-after:Autoutils"
@@ -39,7 +44,7 @@ public class Safe {
 	@Instance("Safe")
 	public static Safe instance;
 
-	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.ProxyClient", serverSide = "info.jbcs.minecraft.safe.Proxy")
+	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.proxy.ProxyClient", serverSide = "info.jbcs.minecraft.safe.proxy.Proxy")
 	public static Proxy proxy;
 	public static int	crackDelay;
 	public static int	crackCount;
@@ -71,10 +76,9 @@ public class Safe {
 		GameRegistry.registerBlock(blockSafe, ItemSafe.class, "safe");
 
 		CraftingManager.getInstance().addRecipe(new ItemStack(blockSafe,1),
-				new Object[] { "XYX", "Y Y", "XYX",
+				"XYX", "Y Y", "XYX",
 				'X', Blocks.iron_block,
-				'Y', Items.iron_ingot,
-			});
+				'Y', Items.iron_ingot);
 
 
 		guiSafe=new GuiHandler("safe"){

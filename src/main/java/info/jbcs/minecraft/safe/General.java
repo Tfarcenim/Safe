@@ -1,7 +1,5 @@
 package info.jbcs.minecraft.safe;
 
-import java.util.*;
-
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -14,6 +12,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+
+import java.util.*;
 
 public class General {
 	public static Random rand = new Random();
