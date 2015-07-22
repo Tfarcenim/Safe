@@ -27,7 +27,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 
-@Mod(modid = "Safe", name = "Safe", version = "1.3.0") //dependencies = "required-after:Autoutils"
+@Mod(modid = "Safe", name = "Safe", version = "1.3.1") //dependencies = "required-after:Autoutils"
 public class Safe {
 	public static BlockSafe blockSafe;
 	public static GuiHandler guiSafe;
