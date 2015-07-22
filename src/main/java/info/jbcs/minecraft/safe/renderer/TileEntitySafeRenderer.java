@@ -1,7 +1,7 @@
 package info.jbcs.minecraft.safe.renderer;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import info.jbcs.minecraft.safe.gui.OwnerHintGui;
 import info.jbcs.minecraft.safe.model.ModelSafe;
 import info.jbcs.minecraft.safe.tileentity.TileEntitySafe;

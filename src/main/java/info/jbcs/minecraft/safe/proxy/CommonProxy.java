@@ -1,6 +1,6 @@
 package info.jbcs.minecraft.safe.proxy;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 import info.jbcs.minecraft.safe.Safe;
 import info.jbcs.minecraft.safe.network.MessagePipeline;
 import info.jbcs.minecraft.safe.network.MsgLand;

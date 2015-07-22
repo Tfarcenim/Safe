@@ -1,7 +1,7 @@
 package info.jbcs.minecraft.safe.gui;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import info.jbcs.minecraft.safe.General;
 import info.jbcs.minecraft.safe.entity.EntityFallingSafe;
 import net.minecraft.client.Minecraft;

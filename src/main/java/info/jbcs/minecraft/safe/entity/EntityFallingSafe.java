@@ -1,6 +1,6 @@
 package info.jbcs.minecraft.safe.entity;
 
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import info.jbcs.minecraft.safe.Safe;
 import info.jbcs.minecraft.safe.block.BlockSafe;
 import info.jbcs.minecraft.safe.network.MsgLand;

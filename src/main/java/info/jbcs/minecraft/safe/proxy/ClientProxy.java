@@ -1,9 +1,9 @@
 package info.jbcs.minecraft.safe.proxy;
 
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import info.jbcs.minecraft.safe.entity.EntityFallingSafe;
 import info.jbcs.minecraft.safe.gui.OwnerHintGui;
 import info.jbcs.minecraft.safe.renderer.BlockSafeRenderer;
