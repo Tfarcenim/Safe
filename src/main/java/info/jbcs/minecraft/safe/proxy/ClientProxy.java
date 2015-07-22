@@ -23,7 +23,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		mc = FMLClientHandler.instance().getClient();
-		//TickRegistry.registerTickHandler(this, Side.CLIENT);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySafe.class, new TileEntitySafeRenderer());
 		RenderingRegistry.registerBlockHandler(new BlockSafeRenderer(RenderingRegistry.getNextAvailableRenderId()));

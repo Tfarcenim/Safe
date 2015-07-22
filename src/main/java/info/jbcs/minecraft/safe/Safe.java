@@ -20,10 +20,6 @@ import info.jbcs.minecraft.safe.proxy.CommonProxy;
 import info.jbcs.minecraft.safe.tileentity.TileEntitySafe;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
@@ -60,11 +56,7 @@ public class Safe {
 
 		commonProxy.preInit();
  	}
-	
-	/*int getBlock(String name,int id){
-		return config.getBlock(name, id).getInt(id);
-	}*/
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		commonProxy.registerPackets(messagePipeline);
@@ -75,11 +67,7 @@ public class Safe {
 		
 		blockSafe = (BlockSafe) new BlockSafe().setCreativeTab(CreativeTabs.tabDecorations);
 		GameRegistry.registerBlock(blockSafe, ItemSafe.class, "safe");
-
-		CraftingManager.getInstance().addRecipe(new ItemStack(blockSafe,1),
-				"XYX", "Y Y", "XYX",
-				'X', Blocks.iron_block,
-				'Y', Items.iron_ingot);
+		commonProxy.registerCraftingRecipes();
 
 
 		guiSafe=new GuiHandler("safe"){

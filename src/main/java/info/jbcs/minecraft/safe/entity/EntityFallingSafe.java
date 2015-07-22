@@ -1,12 +1,10 @@
 package info.jbcs.minecraft.safe.entity;
 
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import info.jbcs.minecraft.safe.Safe;
 import info.jbcs.minecraft.safe.block.BlockSafe;
 import info.jbcs.minecraft.safe.network.MsgLand;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;

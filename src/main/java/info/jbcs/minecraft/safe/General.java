@@ -49,14 +49,7 @@ public class General {
 
 		return stack.getItem();
 	}
-/*
-	public static Block getBlock(int blockId) {
-		if (blockId < 0)
-			return null;
-		
-		return Block.blocksList[blockId];
-	}
-*/
+
 	public static Item getItem(int itemId) {
 		Item item = GameData.getItemRegistry().getObjectById(itemId);
 		return item;
