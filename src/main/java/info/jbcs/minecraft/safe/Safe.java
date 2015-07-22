@@ -1,19 +1,5 @@
 package info.jbcs.minecraft.safe;
 
-import java.io.File;
-
-import cpw.mods.fml.common.network.FMLEventChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -23,45 +9,57 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import info.jbcs.minecraft.safe.block.BlockSafe;
+import info.jbcs.minecraft.safe.entity.EntityFallingSafe;
+import info.jbcs.minecraft.safe.gui.GuiHandler;
+import info.jbcs.minecraft.safe.gui.GuiSafe;
+import info.jbcs.minecraft.safe.inventory.ContainerSafe;
+import info.jbcs.minecraft.safe.item.ItemSafe;
+import info.jbcs.minecraft.safe.network.MessagePipeline;
+import info.jbcs.minecraft.safe.proxy.CommonProxy;
+import info.jbcs.minecraft.safe.tileentity.TileEntitySafe;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
+import java.io.File;
 
-@Mod(modid = "Safe", name = "Safe", version = "1.3.0") //dependencies = "required-after:Autoutils"
+
+@Mod(modid = "Safe", name = "Safe", version = "1.3.1") //dependencies = "required-after:Autoutils"
 public class Safe {
 	public static BlockSafe blockSafe;
 	public static GuiHandler guiSafe;
 
-	public static FMLEventChannel Channel;
-
 	static Configuration config;
+	public MessagePipeline messagePipeline;
 	
 	@Instance("Safe")
 	public static Safe instance;
 
-	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.ProxyClient", serverSide = "info.jbcs.minecraft.safe.Proxy")
-	public static Proxy proxy;
+	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.proxy.ClientProxy", serverSide = "info.jbcs.minecraft.safe.proxy.CommonProxy")
+	public static CommonProxy commonProxy;
 	public static int	crackDelay;
 	public static int	crackCount;
 	public static int	crackChance;
+
+	public Safe(){
+		messagePipeline = new MessagePipeline();
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		File configFile=event.getSuggestedConfigurationFile();
 		config = new Configuration(configFile);
 		config.load();
-		
-		proxy.preInit();
+
+		commonProxy.preInit();
  	}
-	
-	/*int getBlock(String name,int id){
-		return config.getBlock(name, id).getInt(id);
-	}*/
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("Safe");
-		Safe.Channel.register(new ServerPacketHandler());
+		commonProxy.registerPackets(messagePipeline);
 		crackDelay=config.get("general", "crack delay", 86400, "The amount of seconds that must pass before safe block can get another crack").getInt();
 		crackCount=config.get("general", "crack count", 6, "The amount of cracks that will cause the safe to break.").getInt();
 		crackChance=config.get("general", "crack chance", 100, "Chance, in percent, that a safe will receive a crack from an explosion").getInt();
@@ -69,12 +67,7 @@ public class Safe {
 		
 		blockSafe = (BlockSafe) new BlockSafe().setCreativeTab(CreativeTabs.tabDecorations);
 		GameRegistry.registerBlock(blockSafe, ItemSafe.class, "safe");
-
-		CraftingManager.getInstance().addRecipe(new ItemStack(blockSafe,1),
-				new Object[] { "XYX", "Y Y", "XYX",
-				'X', Blocks.iron_block,
-				'Y', Items.iron_ingot,
-			});
+		commonProxy.registerCraftingRecipes();
 
 
 		guiSafe=new GuiHandler("safe"){
@@ -107,8 +100,8 @@ public class Safe {
 		EntityRegistry.registerModEntity(EntityFallingSafe.class, "FallingSafe", 1, this, 40, 9999, false);
 		
 		GuiHandler.register(this);
-        
-		proxy.init();
+
+		commonProxy.init();
 				
         config.save();
 	}

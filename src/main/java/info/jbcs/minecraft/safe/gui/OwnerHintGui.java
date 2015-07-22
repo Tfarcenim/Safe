@@ -1,7 +1,9 @@
-package info.jbcs.minecraft.safe;
+package info.jbcs.minecraft.safe.gui;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import info.jbcs.minecraft.safe.General;
+import info.jbcs.minecraft.safe.entity.EntityFallingSafe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,10 +14,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 public class OwnerHintGui {
     private Minecraft mc;
 
-    static boolean hoveringBlock;
-    static int hoverX;
-    static int hoverY;
-    static int hoverZ;
+    public static boolean hoveringBlock;
+    public static int hoverX;
+    public static int hoverY;
+    public static int hoverZ;
 
     public OwnerHintGui(Minecraft minecraft) {
         super();

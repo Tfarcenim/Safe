@@ -1,7 +1,5 @@
 package info.jbcs.minecraft.safe;
 
-import java.util.*;
-
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -14,6 +12,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+
+import java.util.*;
 
 public class General {
 	public static Random rand = new Random();
@@ -49,14 +49,7 @@ public class General {
 
 		return stack.getItem();
 	}
-/*
-	public static Block getBlock(int blockId) {
-		if (blockId < 0)
-			return null;
-		
-		return Block.blocksList[blockId];
-	}
-*/
+
 	public static Item getItem(int itemId) {
 		Item item = GameData.getItemRegistry().getObjectById(itemId);
 		return item;
