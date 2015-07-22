@@ -4,6 +4,7 @@ import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import info.jbcs.minecraft.safe.Safe;
 import info.jbcs.minecraft.safe.block.BlockSafe;
+import info.jbcs.minecraft.safe.network.MsgLand;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
@@ -130,14 +131,8 @@ public class EntityFallingSafe extends EntityFallingBlock implements IEntityAddi
 			final int finaly=y;
 			
 			if(worldObj.isRemote){
-				ByteBuf buffer = Unpooled.buffer();
-				buffer.writeInt(x);
-				buffer.writeInt(z);
-				buffer.writeInt(startY);
-				buffer.writeInt(finaly-3);
-				FMLProxyPacket packet = new FMLProxyPacket(buffer.copy(), "Safe");
-
-				Safe.Channel.sendToServer(packet);
+				MsgLand msg = new MsgLand(x, z, startY, finaly-3);
+				Safe.instance.messagePipeline.sendToServer(msg);
 			}
 		}
     }

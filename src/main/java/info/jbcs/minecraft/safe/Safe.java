@@ -7,8 +7,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.FMLEventChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import info.jbcs.minecraft.safe.block.BlockSafe;
@@ -17,7 +15,8 @@ import info.jbcs.minecraft.safe.gui.GuiHandler;
 import info.jbcs.minecraft.safe.gui.GuiSafe;
 import info.jbcs.minecraft.safe.inventory.ContainerSafe;
 import info.jbcs.minecraft.safe.item.ItemSafe;
-import info.jbcs.minecraft.safe.proxy.Proxy;
+import info.jbcs.minecraft.safe.network.MessagePipeline;
+import info.jbcs.minecraft.safe.proxy.CommonProxy;
 import info.jbcs.minecraft.safe.tileentity.TileEntitySafe;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,26 +36,29 @@ public class Safe {
 	public static BlockSafe blockSafe;
 	public static GuiHandler guiSafe;
 
-	public static FMLEventChannel Channel;
-
 	static Configuration config;
+	public MessagePipeline messagePipeline;
 	
 	@Instance("Safe")
 	public static Safe instance;
 
-	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.proxy.ProxyClient", serverSide = "info.jbcs.minecraft.safe.proxy.Proxy")
-	public static Proxy proxy;
+	@SidedProxy(clientSide = "info.jbcs.minecraft.safe.proxy.ClientProxy", serverSide = "info.jbcs.minecraft.safe.proxy.CommonProxy")
+	public static CommonProxy commonProxy;
 	public static int	crackDelay;
 	public static int	crackCount;
 	public static int	crackChance;
+
+	public Safe(){
+		messagePipeline = new MessagePipeline();
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		File configFile=event.getSuggestedConfigurationFile();
 		config = new Configuration(configFile);
 		config.load();
-		
-		proxy.preInit();
+
+		commonProxy.preInit();
  	}
 	
 	/*int getBlock(String name,int id){
@@ -65,8 +67,7 @@ public class Safe {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("Safe");
-		Safe.Channel.register(new ServerPacketHandler());
+		commonProxy.registerPackets(messagePipeline);
 		crackDelay=config.get("general", "crack delay", 86400, "The amount of seconds that must pass before safe block can get another crack").getInt();
 		crackCount=config.get("general", "crack count", 6, "The amount of cracks that will cause the safe to break.").getInt();
 		crackChance=config.get("general", "crack chance", 100, "Chance, in percent, that a safe will receive a crack from an explosion").getInt();
@@ -111,8 +112,8 @@ public class Safe {
 		EntityRegistry.registerModEntity(EntityFallingSafe.class, "FallingSafe", 1, this, 40, 9999, false);
 		
 		GuiHandler.register(this);
-        
-		proxy.init();
+
+		commonProxy.init();
 				
         config.save();
 	}
