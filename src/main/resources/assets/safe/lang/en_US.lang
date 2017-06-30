@@ -1,1 +1,6 @@
 tile.safe.name=Safe
+safe.tooltip.owned_by=Owned by
+safe:stat.safeOpened=Safes Opened
+safe:stat.failedToUnlockSafe=Failed To Unlock Safe
+safe:stat.peekedIntoOpenedSafe=Peeked Into Opened Safe
+safe:stat.safeBlownUp=Safes Blown Up

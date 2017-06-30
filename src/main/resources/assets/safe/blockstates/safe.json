@@ -1,0 +1,46 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "safe:safe"
+    },
+    "facing=up": {
+      "model": "safe:safe"
+    },
+    "facing=north": {
+      "model": "safe:safe"
+    },
+    "facing=south": {
+      "model": "safe:safe"
+    },
+    "facing=west": {
+      "model": "safe:safe"
+    },
+    "facing=east": {
+      "model": "safe:safe"
+    },
+    "normal,facing=down": {
+      "model": "safe:safe"
+    },
+    "normal,facing=up": {
+      "model": "safe:safe"
+    },
+    "normal,facing=north": {
+      "model": "safe:safe"
+    },
+    "normal,facing=south": {
+      "model": "safe:safe"
+    },
+    "normal,facing=west": {
+      "model": "safe:safe"
+    },
+    "normal,facing=east": {
+      "model": "safe:safe"
+    },
+    "normal": {
+      "model": "safe:safe"
+    },
+    "inventory": {
+      "model": "safe:safe"
+    }
+  }
+}

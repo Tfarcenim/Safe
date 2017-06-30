@@ -1,7 +1,47 @@
 {
-"safe-open": {"category": "master","sounds": [{"name": "safe-open","stream": false}]},
-"safe-close": {"category": "master","sounds": [{"name": "safe-close","stream": false}]},
-"safe-locked": {"category": "master","sounds": [{"name": "safe-locked","stream": false}]},
-"fall-metal": {"category": "master","sounds": [{"name": "fall-metal","stream": false}]},
-"fall-wood": {"category": "master","sounds": [{"name": "fall-wood","stream": false}]}
+  "safe_open": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "safe:safe-open",
+        "stream": false
+      }
+    ]
+  },
+  "safe_close": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "safe:safe-close",
+        "stream": false
+      }
+    ]
+  },
+  "safe_locked": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "safe:safe-locked",
+        "stream": false
+      }
+    ]
+  },
+  "fall_metal": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "safe:fall-metal",
+        "stream": false
+      }
+    ]
+  },
+  "fall_wood": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "safe:fall-wood",
+        "stream": false
+      }
+    ]
+  }
 }
