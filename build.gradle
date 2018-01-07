@@ -1,7 +1,7 @@
-def mcVersion         = "1.12"
-def majorModVersion   = "1"
+def mcVersion         = "1.12.2"
+def majorModVersion   = "2"
 def apiModVersion     = "0"
-def minorModVersion   = "4"
+def minorModVersion   = "0"
 def patchVersion = "0"
 version = mcVersion+"-"+majorModVersion+"."+apiModVersion+"."+minorModVersion+"."+patchVersion
 
@@ -23,7 +23,7 @@ targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 
 minecraft {
-    version = "1.12-14.21.1.2387"
+    version = "1.12.2-14.23.0.2491"
     mappings = "snapshot_20170624"
 
     if (file("../run").exists()) {
